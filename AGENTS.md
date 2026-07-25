@@ -56,3 +56,10 @@ and each `package.json`/`pyproject.toml`.
 ### GUI unit tests
 
 - Typecheck + unit: `cd platform/surfaces/gui && npx tsc --noEmit && npx vitest run` (63 tests).
+
+### Chrome (browser / computer-use testing)
+
+- Google Chrome is installed as `google-chrome-stable` (Google apt repo). The desktop
+  launcher uses `/usr/local/bin/google-chrome` (wrapper around the stable binary).
+- To update: `sudo apt-get update && sudo apt-get install -y google-chrome-stable`, then
+  `google-chrome-stable --version`.
