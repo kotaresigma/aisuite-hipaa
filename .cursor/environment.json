@@ -1,0 +1,12 @@
+{
+  "name": "aisuite",
+  "user": "ubuntu",
+  "install": "bash .cursor/install.sh",
+  "terminals": [
+    {
+      "name": "runs-viewer",
+      "command": "export PATH=\"$HOME/.local/bin:$PATH\"; poetry run python examples/cli/create_demo_trace.py --trace-file .aisuite/demo.jsonl --cwd . && poetry run python -m aisuite.tracing.viewer --trace-file .aisuite/demo.jsonl --artifact-root .aisuite/artifacts --host 127.0.0.1 --port 8765"
+    }
+  ],
+  "ports": [8765]
+}
