@@ -17,7 +17,7 @@ Victim disables connector read tools (Gmail/HubSpot/Notion/…) as a privacy con
 4. Drive `gmail_search_messages` / `gmail_get_message` — no approval.
 5. Contents land in transcript / standing `send_message` on mention threads.
 
-**Evidence:** `app.py:1096-1101`, `manager.py:1064-1067`, `tool_defs.py:1138-1159`, `agent.py:84-98`, `approval_for_tool` read→False. PoC: `security-reviews/coworker-remaining-routes-tools-reenable-poc.txt`.
+**Evidence:** `app.py:1096-1101`, `manager.py:1064-1067`, `tool_defs.py:1138-1159`, `agent.py:84-98`, `approval_for_tool` read→False. PoC: `/opt/cursor/artifacts/coworker-remaining-routes-tools-reenabe-poc.log`.
 
 **Distinct from:** Gmail filters / HubSpot hidden-fields; allow_deliver; inbox AUTO. Prior near-miss said "still needs approval" — false for `kind=read`.
 

@@ -18,7 +18,7 @@
         "platform/coworker/connectors/tool_defs.py:1138-1159 tool_enabled + patch_tool_settings",
         "platform/coworker/connectors/tool_defs.py:1102-1107 approval_for_tool: kind!=read only",
         "platform/coworker/agent.py:84-98 _enabled_connector_tools filters on tools[].enabled at engine build",
-        "PoC: security-reviews/coworker-remaining-routes-tools-reenable-poc.txt"
+        "PoC: security-reviews/coworker-remaining-routes-tools-reenable-poc.log"
       ],
       "remediation": "Require an explicit local capability token / CSRF secret for mutating connector policy routes. Treat tool enablement changes as consent-equivalent to connect. Consider requiring approval for previously user-disabled tools even when kind=read until the user re-enables them in the GUI.",
       "confirmed_by_reading_code": true,
