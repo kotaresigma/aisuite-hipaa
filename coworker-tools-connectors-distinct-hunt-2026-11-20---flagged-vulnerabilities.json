@@ -1,0 +1,67 @@
+{
+  "date": "2026-11-20",
+  "commit": "1b4bbf303ec21968230b1ec869a144d054e9b3c4",
+  "branch": "cursor/at-rest-security-review-6e0a",
+  "scope": "platform/coworker/tools/*; connectors/email_tools.py, integration_tools.py, browser_automation.py, cli.py; web/fetch.py; skills/; mcp/; memory/tools.py; automation/tools.py; pdf_support.py; roots.py; secrets.py; selfwake.py",
+  "verdict": "NONE NEW",
+  "findings": [],
+  "artifact": "/opt/cursor/artifacts/coworker-tools-connectors-distinct-hunt-2026-11-20.md",
+  "ruled_out": [
+    {
+      "candidate": "DEFAULT_ALLOWED_COMMANDS interpreters (python/node/npm/npx) and find -exec",
+      "reason": "Already reported allowlist interpreter RCE / find -exec / generic shell allowlist bypass"
+    },
+    {
+      "candidate": "Workspace .coworker/config.toml allowed_commands overlay",
+      "reason": "Already reported prior campaign"
+    },
+    {
+      "candidate": "awk/sed/xargs/timeout/nohup/env/script/sh -c allowlist injection",
+      "reason": "Not present in DEFAULT_ALLOWED_COMMANDS; run_shell is intentional bash -c after approval/allowlist"
+    },
+    {
+      "candidate": "subprocess shell=True / pickle / yaml.load / eval",
+      "reason": "No matches in scoped modules"
+    },
+    {
+      "candidate": "git_log / read_file / grep / explore path escape or RCE",
+      "reason": "argv-safe or resolve+relative_to; explore PLAN-only; git filter RCE is prior class"
+    },
+    {
+      "candidate": "SMTP header CRLF / attachment traversal",
+      "reason": "EmailMessage rejects CR/LF (re-verified); _safe_filename + roots checks"
+    },
+    {
+      "candidate": "IMAP SEARCH/UID/folder CRLF remaining",
+      "reason": "Already reported; download/reply reuse same sinks"
+    },
+    {
+      "candidate": "New unquoted connector ID hosts",
+      "reason": "Remaining tool-arg path IDs are on already-reported hosts; Stripe/Linear/Dropbox/Mixpanel/Amplitude/Apollo/Hunter/WhatsApp/PostHog/QBO have params/GQL/profile-only/fixed paths"
+    },
+    {
+      "candidate": "browser_screenshot / upload_file / open_url cookie theft",
+      "reason": "Screenshot path write and upload sandbox already reported; open_url SSRF = web_fetch class; fresh Playwright context"
+    },
+    {
+      "candidate": "web_fetch file:// / unix socket / DNS rebinding",
+      "reason": "file:// and http+unix rejected by httpx (re-verified); rebinding same SSRF class as reported web_fetch"
+    },
+    {
+      "candidate": "Workspace mcp.json stdio RCE / HTTP ${VAR} / requires_approval bypass",
+      "reason": "Already reported (three distinct prior findings)"
+    },
+    {
+      "candidate": "Dangerous skill markdown execution",
+      "reason": "SKILL.md is context data only; allowed_tools unused"
+    },
+    {
+      "candidate": "send_file as_screenshot file:// HTML iframe to sidecar",
+      "reason": "Approval-gated; impact dominated by already-reported ungated web_fetch loopback SSRF"
+    },
+    {
+      "candidate": "pdf_support / roots / secrets / selfwake / connectors/cli.py",
+      "reason": "Local PDF only; roots are grants; secrets icacls argv-safe; selfwake scheduling only; cli is local harness"
+    }
+  ]
+}
