@@ -1,0 +1,63 @@
+{
+  "commit_hash": null,
+  "branch": "cursor/vulnerability-findings-persistence-6ffa",
+  "date": "2026-11-20",
+  "scope": [
+    "platform/coworker/tools/{git,files,shell,search,directories,subagent,registry}.py",
+    "platform/coworker/{risk,permissions}.py",
+    "platform/coworker/connectors/{email_tools,integration_tools,browser_automation}.py",
+    "platform/coworker/web/fetch.py",
+    "platform/coworker/mcp/client.py",
+    "platform/coworker/memory/tools.py",
+    "platform/coworker/automation/tools.py",
+    "platform/coworker/skills/"
+  ],
+  "exclude_respected": [
+    "Git hooks/smudge/textconv/filter RCE",
+    "IMAP UID CR/LF",
+    "IMAP _quote folder injection",
+    "ID path traversal batches listed in prompt",
+    "HTML artifact iframe XSS",
+    "MCP workspace json / ${VAR}",
+    "Slack unicode plan AUTO / inbox button allowlist",
+    "Gmail Never-show IMAP",
+    "HubSpot search-filter oracles",
+    "web_fetch SSRF (classic)"
+  ],
+  "verdict": "1 NEW HIGH",
+  "artifact": "/opt/cursor/artifacts/aisuite-hipaa-openworker-tools-connectors-hunt-2026-11-20.md",
+  "evidence": "/opt/cursor/artifacts/imap-search-criteria-crlf-injection-evidence.txt",
+  "findings": [
+    {
+      "severity": "high",
+      "title": "Ungated email_search IMAP SEARCH-criteria CR/LF injection → mailbox STORE/CREATE/EXPUNGE",
+      "primary_file": "platform/coworker/connectors/email_tools.py",
+      "evidence": [
+        "email_tools.py:214-215 _quote preserves CR/LF",
+        "email_tools.py:244-251 FROM/TO/SUBJECT/TEXT use _quote(value.strip())",
+        "email_tools.py:450 imap.uid(\"SEARCH\", criteria)",
+        "tool_defs.py:165-170 email_search kind=read → approval_for_tool False",
+        "risk.py:39-53 classify → READ; permissions.py:131-133 always allow",
+        "tools/registry.py:62-66 execute has no type/sanitize layer",
+        "Wire PoC: SEARCH line splits; injected A9 UID STORE / CREATE / EXPUNGE appear as separate IMAP commands"
+      ],
+      "attack_path": "1. Attacker prompt-injects a session with email connected (Slack mention, malicious mail/page the agent reads, etc.). 2. Model calls email_search(from_address|subject|text|to_address) containing CR/LF + a second IMAP command (e.g. UID STORE … +FLAGS (\\Deleted)). 3. Tool is kind=read → RiskClass.READ → no approval. 4. build_search_criteria/_quote embeds the CRLF inside a quoted term. 5. imaplib sends a multi-line command; the IMAP server executes the injected STORE/CREATE/EXPUNGE. 6. Impact: silent mailbox mutation under a \"read\" tool.",
+      "distinctness": "Not UID-parameter CR/LF (email_read/_fetch_message). Not SELECT folder _quote injection. Sink is SEARCH criteria fields on ungated email_search.",
+      "doubts": "Requires email connector connected and a reachable IMAP server that accepts pipelined/injected commands after a broken quoted string (common for imaplib raw CRLF splits)."
+    }
+  ],
+  "checked_no_new_medium_plus": [
+    "git_log/files/grep/explore path + PLAN isolation",
+    "shell DEFAULT_ALLOWED_COMMANDS / find-exec / python-node (prior)",
+    "browser_screenshot kind=read overwrite (prior)",
+    "browser_upload_file missing roots (write-gated; prior note)",
+    "web_fetch file:// and http+unix rejected; metadata=classic SSRF class",
+    "mcp/client.py no new injection beyond stdio/mcp.json plant",
+    "memory WRITE-as-READ (prior)",
+    "automation tools standing-grant surface (prior classes)",
+    "skills load_skill name lookup only",
+    "No new ID-traversal host outside excluded batches (Linear GQL; Stripe params; no Salesforce/Intercom tools)",
+    "SMTP EmailMessage header CR/LF rejected",
+    "ToolRegistry lack of coercion enables prior ID class but no new host/token/object triple"
+  ]
+}
