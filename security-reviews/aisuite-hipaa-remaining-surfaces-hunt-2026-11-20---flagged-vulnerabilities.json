@@ -1,6 +1,5 @@
 {
-  "commit_hash": "9da1f2b",
-  "reviewed_code_commit": "08b006e2efc9827453e47df1ee509bf9f63e7ebc",
+  "commit_hash": "08b006e2efc9827453e47df1ee509bf9f63e7ebc",
   "branch": "cursor/vulnerability-findings-persistence-6ffa",
   "detected_at_utc": "2026-11-20T17:24:14Z",
   "scope": "OUTSIDE OpenWorker coworker sidecar HTTP API: aisuite/** (providers, agents, mcp, framework, toolkits), aisuite-js/**, cli/py/aisuite-code-cli/**, examples/chat-ui/**, platform/surfaces/gui (non-HTML-iframe sinks, Tauri, file protocol), .github/workflows/**, viewer-ui/**. Skipped already-reported: chat-ui dotenv base_url cred theft; git config/diff filter/textconv/status filter-clean RCE; github pull hooks smudge; HTML artifact srcDoc XSS.",
