@@ -1,7 +1,0 @@
-victim_disabled {'gmail_search_messages': False, 'gmail_get_message': False}
-attacker_reenabled {'gmail_search_messages': True, 'gmail_get_message': True}
-approval_get_message False
-approval_search False
-route PATCH /v1/connectors/{name}/tools -> manager.update_connector_tools -> patch_tool_settings
-engine_gate agent._enabled_connector_tools uses tool_dicts enabled flags at build_engine
-POC_OK
